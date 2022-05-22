@@ -2,6 +2,7 @@ package com.xmen.magneto.recruitment.domain.service.impl;
 
 import com.xmen.magneto.recruitment.application.RecruitmentRequest;
 import com.xmen.magneto.recruitment.application.RecruitmentResponse;
+import com.xmen.magneto.recruitment.domain.service.MutantService;
 import com.xmen.magneto.recruitment.domain.service.RecruitmentService;
 import com.xmen.magneto.recruitment.exception.BusinessException;
 import lombok.extern.slf4j.Slf4j;
@@ -14,16 +15,21 @@ import java.util.stream.Stream;
 @Service
 public class RecruitmentServiceImpl implements RecruitmentService {
 
+    private final MutantService mutantService;
     private static int MINIMUM_DNA_SEGMENT = 2;
     private static int MINIMUM_DNA_NITROGENOUS_BASE = 4;
     private static String PERMITTED_DNA_NITROGENOUS_BASE = "^[ATCG]+$";
+
+    public RecruitmentServiceImpl(MutantService mutantService) {
+        this.mutantService = mutantService;
+    }
 
     @Override
     public Mono<RecruitmentResponse> validateIfHumanIsMutant(RecruitmentRequest recruitmentRequest) {
         log.debug("Validating if Human is a mutant -> DNA Sequence: {}", recruitmentRequest);
         return Mono.just(recruitmentRequest)
                 .flatMap(x -> validateDnaSequenceIntegrity(x.getDnaSequence()))
-                .flatMap(strings -> Mono.just(new RecruitmentResponse(false)));
+                .flatMap(x -> mutantService.humanIsMutant(x).map(RecruitmentResponse::new));
     }
 
     private Mono<String[]> validateDnaSequenceIntegrity(String[] dnaSequence) {
@@ -36,6 +42,10 @@ public class RecruitmentServiceImpl implements RecruitmentService {
 
         if (sumOfVectorLength % dnaSequence.length != 0) {
             throw new BusinessException("El tamaño de los segmentos de ADN deben coincidir");
+        }
+
+        if (dnaSequence.length != (sumOfVectorLength / dnaSequence.length)) {
+            throw new BusinessException("El tamaño de los segmentos de ADN deben coincidir con el tamaño total del ADN");
         }
 
         return Mono.just(dnaSequence);

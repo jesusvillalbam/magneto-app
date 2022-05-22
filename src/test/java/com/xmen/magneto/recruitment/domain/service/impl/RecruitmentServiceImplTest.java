@@ -84,4 +84,26 @@ class RecruitmentServiceImplTest {
                 .expectErrorMessage("El tamaño de los segmentos de ADN deben coincidir")
                 .verify();
     }
+
+    @Test
+    void validateIfHumanIsMutant_DnaSequenceSegmentsMustHaveSameLengthThanDNA() {
+        //given
+        var recruitmentRequest = new RecruitmentRequest(new String[]{
+                "ATGCGA",
+                "CAGTGC",
+                "TTATGT",
+                "AGAAGG",
+                "CCACTA",
+                "TCACTG",
+                "CCACTA",
+                "TCACTG"});
+
+        //when
+        Mono<RecruitmentResponse> result = recruitmentService.validateIfHumanIsMutant(recruitmentRequest);
+
+        //then
+        StepVerifier.create(result)
+                .expectErrorMessage("El tamaño de los segmentos de ADN deben coincidir con el tamaño total del ADN")
+                .verify();
+    }
 }

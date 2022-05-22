@@ -14,7 +14,7 @@ public class ErrorHandler {
     @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public Mono<ErrorDto> handleException(RuntimeException ex) {
-        log.error(ex.getMessage());
+        log.error(ex.getMessage(), ex);
         var error = new ErrorDto(ex.getMessage());
         return Mono.just(error);
     }
