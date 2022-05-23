@@ -2,18 +2,26 @@ package com.xmen.magneto.recruitment.domain.service.impl;
 
 import com.xmen.magneto.recruitment.application.RecruitmentRequest;
 import com.xmen.magneto.recruitment.application.RecruitmentResponse;
+import com.xmen.magneto.recruitment.domain.service.MutantService;
 import com.xmen.magneto.recruitment.domain.service.RecruitmentService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+
+import static org.mockito.ArgumentMatchers.any;
+import static reactor.core.publisher.Mono.when;
 
 @SpringBootTest
 class RecruitmentServiceImplTest {
 
     @Autowired
     RecruitmentService recruitmentService;
+
+    @MockBean
+    MutantService mutantService;
 
     @Test
     void validateIfHumanIsMutant_DnaSequenceNull() {
