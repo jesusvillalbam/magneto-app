@@ -16,9 +16,9 @@ import java.util.stream.Stream;
 public class RecruitmentServiceImpl implements RecruitmentService {
 
     private final MutantService mutantService;
-    private static int MINIMUM_DNA_SEGMENT = 2;
-    private static int MINIMUM_DNA_NITROGENOUS_BASE = 4;
-    private static String PERMITTED_DNA_NITROGENOUS_BASE = "^[ATCG]+$";
+    private static final int MINIMUM_DNA_SEGMENT = 2;
+    private static final int MINIMUM_DNA_NITROGENOUS_BASE = 4;
+    private static final String PERMITTED_DNA_NITROGENOUS_BASE = "^[ATCG]+$";
 
     public RecruitmentServiceImpl(MutantService mutantService) {
         this.mutantService = mutantService;
@@ -38,7 +38,7 @@ public class RecruitmentServiceImpl implements RecruitmentService {
         }
 
         Stream.of(dnaSequence).forEach(this::validateDnaNitrogenousBase);
-        int sumOfVectorLength = Stream.of(dnaSequence).mapToInt(eachVector -> eachVector.length()).sum();
+        int sumOfVectorLength = Stream.of(dnaSequence).mapToInt(String::length).sum();
 
         if (sumOfVectorLength % dnaSequence.length != 0) {
             throw new BusinessException("El tamaño de los segmentos de ADN deben coincidir");
