@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class RecruitmentResponse {
-    private boolean isMutant;
+public class StatsResponse {
+    private Long countMutantDna;
+    private Long countHumanDna;
+    private Double ratio;
 }

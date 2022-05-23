@@ -34,4 +34,12 @@ public class ErrorHandler {
         var error = new ErrorDto(ex.getMessage());
         return Mono.just(error);
     }
+
+    @ExceptionHandler(NotFoundException.class)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public Mono<ErrorDto> handleNotFoundException(RuntimeException ex) {
+        log.error(ex.getMessage());
+        var error = new ErrorDto(ex.getMessage());
+        return Mono.just(error);
+    }
 }

@@ -4,6 +4,7 @@ import com.xmen.magneto.recruitment.domain.service.RecruitmentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,5 +32,15 @@ public class RecruitmentController {
     public Mono<RecruitmentResponse> validateIfHumanIsMutant(@RequestBody Mono<RecruitmentRequest> recruitmentRequest) {
         return recruitmentRequest
                 .flatMap(recruitmentService::validateIfHumanIsMutant);
+    }
+
+    @Operation(description = "Get recruitment process stats",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Stats"),
+                    @ApiResponse(responseCode = "400", description = "Bad request")
+            })
+    @GetMapping("/stats")
+    public Mono<StatsResponse> getRecruitmentProcessStats(){
+        return recruitmentService.getRecruitmentProcessStats();
     }
 }
